@@ -359,24 +359,13 @@ Conversación:
 ${c.conv}`;
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('/api/analyze', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-allow-browser': 'true'
-      },
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 1000,
-        messages: [{ role: 'user', content: prompt }]
-      })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ conversation: c.conv, apiKey })
     });
-    const data = await res.json();
-    if (data.error) throw new Error(data.error.message);
-    const raw = data.content[0].text.replace(/```json|```/g,'').trim();
-    const parsed = JSON.parse(raw);
+    const parsed = await res.json();
+    if (!res.ok) throw new Error(parsed.error || 'Error del servidor');
     c.analysis = { ...parsed };
     c.status = parsed.status;
     saveContacts();
