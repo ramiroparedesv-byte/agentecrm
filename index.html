@@ -311,6 +311,7 @@ function showLeadDetail(l) {
       <div class="tabs">
         <button class="tab active" id="tab-conv" onclick="showLeadTab('conv',${l.id})">Conversation</button>
         <button class="tab" id="tab-ai" onclick="showLeadTab('ai',${l.id})">AI Analysis</button>
+        <button class="tab" id="tab-psych" onclick="showLeadTab('psych',${l.id})" style="background:linear-gradient(135deg,#EEEDFE,#E6F1FB);color:#534AB7;border-color:#AFA9EC;">Psychology</button>
       </div>
       <div id="tab-content"></div>
     </div>`;
@@ -319,8 +320,10 @@ function showLeadDetail(l) {
 
 function showLeadTab(tab, id) {
   const l = leads.find(x=>x.id===id);
-  document.getElementById('tab-conv').classList.toggle('active', tab==='conv');
-  document.getElementById('tab-ai').classList.toggle('active', tab==='ai');
+  ['conv','ai','psych'].forEach(t => {
+    const el = document.getElementById('tab-'+t);
+    if (el) el.classList.toggle('active', t===tab);
+  });
   const content = document.getElementById('tab-content');
   if (tab === 'conv') {
     const msgs = (l.conv||'').trim().split('\n').map(line => {
@@ -337,10 +340,20 @@ function showLeadTab(tab, id) {
         <button class="btn-green" onclick="closeDeal(${id})">✓ Mark as Closed Won</button>
       ` : `<div class="closed-banner"><span style="font-size:20px;">🎉</span><div><div style="font-size:13px;font-weight:500;color:var(--green-text);">Deal Closed!</div><div style="font-size:11px;color:var(--green-text);opacity:.7;">${l.closedAt||''}</div></div></div>`}
     `;
-  } else {
+  } else if (tab === 'ai') {
     if (!l.analysis) {
       content.innerHTML = `<div style="text-align:center;padding:2rem;color:var(--text-tertiary);font-size:13px;">No analysis yet.</div><button class="btn-full" onclick="analyzeLead(${id})">Analyze with Claude →</button>`;
     } else renderLeadAnalysis(l);
+  } else if (tab === 'psych') {
+    if (!l.psych) {
+      content.innerHTML = `
+        <div style="text-align:center;padding:1.5rem 1rem 1rem;">
+          <div style="font-size:28px;margin-bottom:8px;">🧠</div>
+          <div style="font-size:13px;color:var(--text-tertiary);margin-bottom:16px;">Claude will analyze this client psychologically — personality, communication style, buying triggers, rapport tips and more.</div>
+        </div>
+        <button class="btn-full" onclick="analyzePsychology(${id})" style="background:#7F77DD;color:white;border:none;">Run Psychological Profile →</button>
+      `;
+    } else renderPsychProfile(l);
   }
 }
 
@@ -360,6 +373,125 @@ function renderLeadAnalysis(l) {
       <button class="btn-full" onclick="analyzeLead(${l.id})">Re-analyze →</button>
       <button class="btn-green" onclick="closeDeal(${l.id})">✓ Mark as Closed Won</button>
     ` : `<div class="closed-banner"><span style="font-size:20px;">🎉</span><div><div style="font-size:13px;font-weight:500;color:var(--green-text);">Deal Closed!</div><div style="font-size:11px;color:var(--green-text);opacity:.7;">${l.closedAt||''}</div></div></div>`}
+  `;
+}
+
+async function analyzePsychology(id) {
+  const apiKey = localStorage.getItem('agentecrm_apikey');
+  if (!apiKey) { showApiModal(); return; }
+  const l = leads.find(x=>x.id===id);
+  const contact = l.contactId ? contacts.find(x=>x.id===l.contactId) : null;
+  const notes = contact ? contact.notes : '';
+  const content = document.getElementById('tab-content');
+  if (content) content.innerHTML = `<div style="text-align:center;padding:2rem;"><div style="font-size:28px;margin-bottom:12px;">🧠</div><div class="loading" style="justify-content:center;"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div><div style="font-size:12px;color:var(--text-tertiary);margin-top:8px;">Claude is building the psychological profile...</div></div>`;
+  try {
+    const res = await fetch('/api/analyze', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ conversation: l.conv, notes: notes||'', apiKey, type: 'psychology' })
+    });
+    const parsed = await res.json();
+    if (!res.ok) throw new Error(parsed.error || 'Server error');
+    l.psych = parsed;
+    saveLeads();
+    renderPsychProfile(l);
+  } catch(e) {
+    if (content) content.innerHTML = `<div style="background:#FCEBEB;color:#A32D2D;padding:12px;border-radius:6px;font-size:13px;">Error: ${e.message}</div><button class="btn-full" onclick="showApiModal()">Configure API Key</button>`;
+  }
+}
+
+function renderPsychProfile(l) {
+  const p = l.psych;
+  const content = document.getElementById('tab-content');
+  if (!content || !p) return;
+
+  const discColors = { D:'#FCEBEB:#A32D2D', I:'#FAEEDA:#854F0B', S:'#EAF3DE:#27500A', C:'#E6F1FB:#0C447C' };
+  const discColor = (discColors[p.disc]||'#F1EFE8:#5F5E5A').split(':');
+  const classColors = { Analytical:'#E6F1FB:#0C447C', Driver:'#FCEBEB:#A32D2D', Expressive:'#FAEEDA:#854F0B', Amiable:'#EAF3DE:#27500A' };
+  const classColor = (classColors[p.classification]||'#F1EFE8:#5F5E5A').split(':');
+
+  const listItems = (arr) => (arr||[]).map(i=>`<div style="font-size:12px;padding:4px 0;border-bottom:0.5px solid var(--border);color:var(--text);">→ ${i}</div>`).join('');
+
+  content.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+      <div style="background:${discColor[0]};border-radius:8px;padding:12px;text-align:center;">
+        <div style="font-size:24px;font-weight:500;color:${discColor[1]};">${p.disc||'?'}</div>
+        <div style="font-size:11px;font-weight:500;color:${discColor[1]};margin-top:2px;">${p.disc_label||''}</div>
+        <div style="font-size:10px;color:${discColor[1]};opacity:.7;margin-top:2px;">DISC Profile</div>
+      </div>
+      <div style="background:${classColor[0]};border-radius:8px;padding:12px;text-align:center;">
+        <div style="font-size:15px;font-weight:500;color:${classColor[1]};">${p.classification||'?'}</div>
+        <div style="font-size:10px;color:${classColor[1]};opacity:.7;margin-top:4px;">Buyer Type</div>
+      </div>
+    </div>
+
+    <div class="ai-block">
+      <div class="ai-label">Personality Profile</div>
+      <div class="ai-text">${p.disc_description||''}</div>
+      <div class="ai-text" style="margin-top:6px;color:var(--text-secondary);">${p.personality_summary||''}</div>
+    </div>
+
+    <div class="ai-block">
+      <div class="ai-label">Emotional State Right Now</div>
+      <div class="ai-text">${p.emotional_state||''}</div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+      <div class="ai-block" style="margin-bottom:0;">
+        <div class="ai-label">Communication Style</div>
+        <div style="font-size:12px;color:var(--text-secondary);margin-bottom:4px;">Tone: <span style="color:var(--text);font-weight:500;">${p.communication_style?.tone||''}</span></div>
+        <div style="font-size:12px;color:var(--text-secondary);margin-bottom:4px;">Messages: <span style="color:var(--text);font-weight:500;">${p.communication_style?.message_length||''}</span></div>
+        <div style="font-size:12px;color:var(--text-secondary);">Speed: <span style="color:var(--text);font-weight:500;">${p.communication_style?.response_speed||''}</span></div>
+      </div>
+      <div class="ai-block" style="margin-bottom:0;">
+        <div class="ai-label">Decision Speed</div>
+        <div style="font-size:14px;font-weight:500;color:var(--text);margin-bottom:4px;">${p.decision_speed||''}</div>
+        <div style="font-size:11px;color:var(--text-tertiary);">${p.decision_speed_reason||''}</div>
+      </div>
+    </div>
+
+    <div class="ai-block">
+      <div class="ai-label">Key Patterns</div>
+      ${listItems(p.communication_style?.key_patterns)}
+    </div>
+
+    <div class="ai-block">
+      <div class="ai-label">Buying Motivators</div>
+      ${listItems(p.buying_motivators)}
+    </div>
+
+    <div class="ai-block">
+      <div class="ai-label">Fears & Blockers</div>
+      ${listItems(p.fears_and_blockers)}
+    </div>
+
+    <div class="ai-block">
+      <div class="ai-label">How to Build Rapport</div>
+      ${listItems(p.rapport_tips)}
+    </div>
+
+    <div class="ai-block">
+      <div class="ai-label">What to Avoid</div>
+      ${listItems(p.what_to_avoid)}
+    </div>
+
+    <div class="ai-block">
+      <div class="ai-label">How to Pitch to This Person</div>
+      <div class="ai-text">${p.ideal_pitch_tone||''}</div>
+    </div>
+
+    <div class="ai-block">
+      <div class="ai-label">Trust Builders</div>
+      ${listItems(p.trust_builders)}
+    </div>
+
+    <div style="background:#EEEDFE;border:0.5px solid #AFA9EC;border-radius:8px;padding:12px;margin-bottom:8px;">
+      <div style="font-size:10px;font-weight:500;color:#534AB7;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Power Phrase — use this with ${l.name}</div>
+      <div style="font-size:13px;color:#3C3489;font-style:italic;">"${p.power_phrase||''}"</div>
+      <button class="btn-copy" style="border-color:#AFA9EC;color:#534AB7;margin-top:6px;" onclick="navigator.clipboard.writeText('${escJS(p.power_phrase||'')}')">Copy phrase</button>
+    </div>
+
+    <button class="btn-full" onclick="analyzePsychology(${l.id})" style="background:#7F77DD;color:white;border:none;margin-top:4px;">Re-analyze Psychology →</button>
   `;
 }
 
