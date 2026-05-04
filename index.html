@@ -1,34 +1,21 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AgenteCRM — CRM inteligente para vendedores</title>
+  <title>AgenteCRM — AI-Powered CRM for Sales Teams</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg: #f9f9f8;
-      --surface: #ffffff;
-      --border: rgba(0,0,0,0.1);
-      --border-strong: rgba(0,0,0,0.2);
-      --text: #1a1a18;
-      --text-secondary: #6b6b67;
-      --text-tertiary: #9b9b96;
-      --blue-bg: #E6F1FB;
-      --blue-text: #0C447C;
-      --blue-border: #85B7EB;
-      --green-bg: #EAF3DE;
-      --green-text: #27500A;
-      --amber-bg: #FAEEDA;
-      --amber-text: #854F0B;
-      --red-bg: #FCEBEB;
-      --red-text: #A32D2D;
-      --radius: 10px;
-      --radius-sm: 6px;
+      --bg: #f9f9f8; --surface: #ffffff; --border: rgba(0,0,0,0.1); --border-strong: rgba(0,0,0,0.2);
+      --text: #1a1a18; --text-secondary: #6b6b67; --text-tertiary: #9b9b96;
+      --blue-bg: #E6F1FB; --blue-text: #0C447C; --blue-border: #85B7EB;
+      --green-bg: #EAF3DE; --green-text: #27500A;
+      --amber-bg: #FAEEDA; --amber-text: #854F0B;
+      --red-bg: #FCEBEB; --red-text: #A32D2D;
+      --radius: 10px; --radius-sm: 6px;
     }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
-
-    /* NAVBAR */
     .navbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; background: var(--surface); border-bottom: 0.5px solid var(--border); }
     .logo { font-size: 16px; font-weight: 500; } .logo span { color: #378ADD; }
     .nav-right { display: flex; align-items: center; gap: 8px; }
@@ -36,56 +23,57 @@
     .btn-outline:hover { background: var(--bg); }
     .btn-primary { font-size: 13px; padding: 6px 14px; border-radius: 20px; border: none; background: #378ADD; color: white; cursor: pointer; }
     .btn-primary:hover { background: #185FA5; }
-
-    /* LAYOUT */
-    .app { display: grid; grid-template-columns: 280px 1fr; height: calc(100vh - 53px); }
-    .sidebar { border-right: 0.5px solid var(--border); background: var(--surface); display: flex; flex-direction: column; }
-    .sidebar-head { padding: 14px 16px; border-bottom: 0.5px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-    .sidebar-title { font-size: 13px; font-weight: 500; color: var(--text-secondary); }
-    .btn-add { font-size: 12px; padding: 4px 10px; border-radius: 20px; border: 0.5px solid var(--border-strong); background: transparent; color: var(--text); cursor: pointer; }
-    .btn-add:hover { background: var(--bg); }
-    .contact-list { flex: 1; overflow-y: auto; }
-    .contact-row { display: flex; align-items: center; gap: 10px; padding: 10px 16px; cursor: pointer; border-bottom: 0.5px solid var(--border); }
-    .contact-row:hover { background: var(--bg); }
-    .contact-row.active { background: var(--blue-bg); }
-    .avatar { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; flex-shrink: 0; }
-    .contact-info { flex: 1; min-width: 0; }
-    .contact-name { font-size: 13px; font-weight: 500; }
-    .contact-sub { font-size: 11px; color: var(--text-tertiary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; white-space: nowrap; }
-    .badge-hot { background: var(--red-bg); color: var(--red-text); }
-    .badge-warm { background: var(--amber-bg); color: var(--amber-text); }
-    .badge-cold { background: var(--blue-bg); color: var(--blue-text); }
-
-    /* STATS BAR */
-    .stats-bar { display: flex; gap: 0; border-bottom: 0.5px solid var(--border); background: var(--surface); }
+    .stats-bar { display: flex; border-bottom: 0.5px solid var(--border); background: var(--surface); }
     .stat { flex: 1; padding: 12px 20px; border-right: 0.5px solid var(--border); }
     .stat:last-child { border-right: none; }
     .stat-val { font-size: 22px; font-weight: 500; }
     .stat-lbl { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; }
-
-    /* DETAIL */
+    .app { display: grid; grid-template-columns: 300px 1fr; height: calc(100vh - 97px); }
+    .sidebar { border-right: 0.5px solid var(--border); background: var(--surface); display: flex; flex-direction: column; overflow: hidden; }
+    .sidebar-tabs { display: flex; border-bottom: 0.5px solid var(--border); flex-shrink: 0; }
+    .sidebar-tab { flex: 1; padding: 10px; font-size: 12px; font-weight: 500; text-align: center; cursor: pointer; color: var(--text-tertiary); border-bottom: 2px solid transparent; background: transparent; border-top: none; border-left: none; border-right: none; }
+    .sidebar-tab.active { color: var(--text); border-bottom-color: #378ADD; }
+    .sidebar-tab:hover { background: var(--bg); }
+    .sidebar-content { flex: 1; overflow-y: auto; }
+    .section-hdr { display: flex; align-items: center; justify-content: space-between; padding: 8px 16px; background: var(--bg); border-bottom: 0.5px solid var(--border); position: sticky; top: 0; z-index: 1; }
+    .section-hdr-title { font-size: 11px; font-weight: 500; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: .05em; }
+    .section-hdr-right { display: flex; align-items: center; gap: 6px; }
+    .section-count { font-size: 11px; color: var(--text-tertiary); background: rgba(0,0,0,.06); padding: 1px 7px; border-radius: 20px; }
+    .section-arrow { font-size: 10px; color: var(--text-tertiary); transition: transform .2s; display: inline-block; }
+    .section-arrow.open { transform: rotate(0deg); }
+    .section-arrow.closed { transform: rotate(-90deg); }
+    .btn-tiny { font-size: 11px; padding: 3px 8px; border-radius: 20px; border: 0.5px solid var(--border-strong); background: transparent; color: var(--text-tertiary); cursor: pointer; }
+    .btn-tiny:hover { background: var(--surface); color: var(--text); }
+    .lead-row { display: flex; align-items: center; gap: 10px; padding: 10px 16px; cursor: pointer; border-bottom: 0.5px solid var(--border); }
+    .lead-row:hover { background: var(--bg); }
+    .lead-row.active { background: var(--blue-bg); }
+    .contact-card { display: flex; align-items: center; gap: 10px; padding: 10px 16px; cursor: pointer; border-bottom: 0.5px solid var(--border); }
+    .contact-card:hover { background: var(--bg); }
+    .contact-card.active { background: var(--blue-bg); }
+    .avatar { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; flex-shrink: 0; }
+    .row-info { flex: 1; min-width: 0; }
+    .row-name { font-size: 13px; font-weight: 500; }
+    .row-sub { font-size: 11px; color: var(--text-tertiary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; white-space: nowrap; }
+    .badge-hot { background: var(--red-bg); color: var(--red-text); }
+    .badge-warm { background: var(--amber-bg); color: var(--amber-text); }
+    .badge-cold { background: var(--blue-bg); color: var(--blue-text); }
+    .badge-closed { background: #f0fce8; color: var(--green-text); }
     .detail { display: flex; flex-direction: column; overflow: hidden; }
-    .detail-head { padding: 14px 20px; border-bottom: 0.5px solid var(--border); display: flex; align-items: center; gap: 10px; background: var(--surface); }
-    .detail-name { font-size: 15px; font-weight: 500; }
+    .detail-head { padding: 12px 20px; border-bottom: 0.5px solid var(--border); display: flex; align-items: center; gap: 10px; background: var(--surface); flex-shrink: 0; }
+    .detail-name { font-size: 15px; font-weight: 500; flex: 1; min-width: 0; }
     .detail-body { flex: 1; overflow-y: auto; padding: 16px 20px; }
-    .empty-state { display: flex; align-items: center; justify-content: center; height: 100%; color: var(--text-tertiary); font-size: 14px; }
-
-    /* TABS */
+    .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--text-tertiary); font-size: 14px; gap: 10px; }
     .tabs { display: flex; gap: 4px; margin-bottom: 14px; }
     .tab { font-size: 12px; padding: 5px 12px; border-radius: 20px; border: 0.5px solid var(--border); background: transparent; color: var(--text-tertiary); cursor: pointer; }
     .tab.active { background: var(--bg); color: var(--text); border-color: var(--border-strong); }
-
-    /* CHAT */
-    .chat-wrap { background: var(--bg); border-radius: var(--radius); padding: 12px; margin-bottom: 12px; max-height: 300px; overflow-y: auto; }
+    .chat-wrap { background: var(--bg); border-radius: var(--radius); padding: 12px; margin-bottom: 12px; max-height: 280px; overflow-y: auto; }
     .msg { margin-bottom: 8px; }
     .msg-name { font-size: 10px; color: var(--text-tertiary); margin-bottom: 2px; }
     .bubble { display: inline-block; padding: 7px 11px; border-radius: 10px; font-size: 13px; line-height: 1.5; max-width: 85%; }
     .msg-in .bubble { background: var(--surface); border: 0.5px solid var(--border); color: var(--text); }
     .msg-out { text-align: right; }
     .msg-out .bubble { background: var(--green-bg); color: var(--green-text); }
-
-    /* AI BLOCKS */
     .ai-block { background: var(--bg); border-radius: var(--radius-sm); padding: 10px 12px; margin-bottom: 8px; }
     .ai-label { font-size: 10px; font-weight: 500; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 5px; }
     .ai-text { font-size: 13px; color: var(--text); line-height: 1.6; }
@@ -94,39 +82,34 @@
     .ai-msg .ai-text { color: var(--blue-text); }
     .objecion { font-size: 13px; padding: 4px 0; border-bottom: 0.5px solid var(--border); color: var(--text); }
     .objecion:last-child { border-bottom: none; }
-
-    /* BUTTONS */
     .btn-full { width: 100%; padding: 10px; font-size: 13px; font-weight: 500; border-radius: var(--radius-sm); border: 0.5px solid var(--border-strong); background: transparent; color: var(--text); cursor: pointer; margin-top: 8px; }
     .btn-full:hover { background: var(--bg); }
+    .btn-green { width: 100%; padding: 10px; font-size: 13px; font-weight: 500; border-radius: var(--radius-sm); border: none; background: var(--green-bg); color: var(--green-text); cursor: pointer; margin-top: 8px; }
+    .btn-green:hover { background: #c8e8a0; }
     .btn-copy { font-size: 11px; padding: 4px 10px; border-radius: var(--radius-sm); border: 0.5px solid var(--blue-border); background: transparent; color: var(--blue-text); cursor: pointer; margin-top: 6px; }
     .btn-copy:hover { background: var(--blue-bg); }
     .btn-copy.copied { background: var(--green-bg); color: var(--green-text); border-color: transparent; }
-
-    /* NEW CONV */
+    .closed-banner { background: var(--green-bg); border-radius: var(--radius-sm); padding: 12px 14px; margin-top: 10px; display: flex; align-items: center; gap: 10px; }
+    .conv-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: var(--bg); border-radius: var(--radius-sm); margin-bottom: 6px; cursor: pointer; }
+    .conv-item:hover { background: #efefed; }
     textarea { width: 100%; min-height: 120px; font-size: 13px; padding: 10px 12px; border-radius: var(--radius-sm); border: 0.5px solid var(--border-strong); background: var(--surface); color: var(--text); resize: vertical; font-family: inherit; line-height: 1.6; }
     textarea:focus { outline: none; border-color: #378ADD; }
-
-    /* LOADING */
+    .form-row { margin-bottom: 12px; }
+    .form-label { font-size: 12px; color: var(--text-tertiary); display: block; margin-bottom: 6px; }
+    .form-input { width: 100%; padding: 9px 12px; border-radius: var(--radius-sm); border: 0.5px solid var(--border-strong); font-size: 13px; font-family: inherit; background: var(--surface); color: var(--text); }
+    .form-input:focus { outline: none; border-color: #378ADD; }
     .loading { display: flex; gap: 5px; align-items: center; padding: 12px 0; }
     .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text-tertiary); animation: pulse 1.2s ease-in-out infinite; }
-    .dot:nth-child(2) { animation-delay: .2s; }
-    .dot:nth-child(3) { animation-delay: .4s; }
+    .dot:nth-child(2) { animation-delay: .2s; } .dot:nth-child(3) { animation-delay: .4s; }
     @keyframes pulse { 0%,80%,100%{opacity:.2;}40%{opacity:1;} }
-
     .thinking-text { font-size: 12px; color: var(--text-tertiary); margin-left: 4px; }
-
-    /* MODAL */
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.4); display: flex; align-items: center; justify-content: center; z-index: 100; }
-    .modal { background: var(--surface); border-radius: var(--radius); padding: 24px; width: 420px; max-width: 90vw; }
+    .modal { background: var(--surface); border-radius: var(--radius); padding: 24px; width: 440px; max-width: 90vw; max-height: 90vh; overflow-y: auto; }
     .modal h3 { font-size: 15px; font-weight: 500; margin-bottom: 8px; }
     .modal p { font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.6; }
-    .modal input { width: 100%; padding: 9px 12px; border-radius: var(--radius-sm); border: 0.5px solid var(--border-strong); font-size: 13px; font-family: mono; margin-bottom: 12px; background: var(--bg); color: var(--text); }
-    .modal-btns { display: flex; gap: 8px; justify-content: flex-end; }
-
-    @media (max-width: 640px) {
-      .app { grid-template-columns: 1fr; }
-      .sidebar { display: none; }
-    }
+    .modal-btns { display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px; }
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px; }
+    @media (max-width: 640px) { .app { grid-template-columns: 1fr; } .sidebar { display: none; } }
   </style>
 </head>
 <body>
@@ -135,320 +118,423 @@
   <div class="logo">Agente<span>CRM</span></div>
   <div class="nav-right">
     <button class="btn-outline" onclick="showApiModal()">⚙ API Key</button>
-    <button class="btn-primary" onclick="addNew()">+ Nuevo prospecto</button>
+    <button class="btn-primary" onclick="addNewContact()">+ Add Contact</button>
   </div>
 </nav>
 
 <div class="stats-bar">
-  <div class="stat"><div class="stat-val" id="sTotal">0</div><div class="stat-lbl">prospectos</div></div>
-  <div class="stat"><div class="stat-val" style="color:#A32D2D;" id="sHot">0</div><div class="stat-lbl">listos para cerrar</div></div>
-  <div class="stat"><div class="stat-val" style="color:#854F0B;" id="sWarm">0</div><div class="stat-lbl">en proceso</div></div>
-  <div class="stat"><div class="stat-val" style="color:#185FA5;" id="sCold">0</div><div class="stat-lbl">fríos</div></div>
+  <div class="stat"><div class="stat-val" id="sTotal">0</div><div class="stat-lbl">active leads</div></div>
+  <div class="stat"><div class="stat-val" style="color:#A32D2D;" id="sHot">0</div><div class="stat-lbl">ready to close</div></div>
+  <div class="stat"><div class="stat-val" style="color:#854F0B;" id="sWarm">0</div><div class="stat-lbl">in progress</div></div>
+  <div class="stat"><div class="stat-val" style="color:#27500A;" id="sClosed">0</div><div class="stat-lbl">closed won</div></div>
 </div>
 
 <div class="app">
   <div class="sidebar">
-    <div class="sidebar-head">
-      <span class="sidebar-title">Pipeline</span>
-      <button class="btn-add" onclick="addNew()">+ Nuevo</button>
+    <div class="sidebar-tabs">
+      <button class="sidebar-tab active" id="stab-pipeline" onclick="switchSidebarTab('pipeline')">Pipeline</button>
+      <button class="sidebar-tab" id="stab-contacts" onclick="switchSidebarTab('contacts')">Contacts</button>
     </div>
-    <div class="contact-list" id="contactList"></div>
+    <div class="sidebar-content" id="sidebarContent"></div>
   </div>
   <div class="detail" id="detail">
-    <div class="empty-state">Selecciona un prospecto o agrega uno nuevo</div>
+    <div class="empty-state">
+      <div style="font-size:36px;">💬</div>
+      <div>Select a lead or start a conversation from Contacts</div>
+    </div>
   </div>
 </div>
 
 <!-- API KEY MODAL -->
 <div class="modal-overlay" id="apiModal" style="display:none;">
   <div class="modal">
-    <h3>Configura tu API Key de Anthropic</h3>
-    <p>Necesitas una API key para que Claude analice las conversaciones. Obtén la tuya en <a href="https://console.anthropic.com" target="_blank" style="color:#378ADD;">console.anthropic.com</a></p>
-    <input type="password" id="apiKeyInput" placeholder="sk-ant-..." />
+    <h3>Configure Anthropic API Key</h3>
+    <p>You need an API key for Claude to analyze conversations. Get yours at <a href="https://console.anthropic.com" target="_blank" style="color:#378ADD;">console.anthropic.com</a></p>
+    <input type="password" id="apiKeyInput" class="form-input" placeholder="sk-ant-..." />
     <div class="modal-btns">
-      <button class="btn-outline" onclick="closeApiModal()">Cancelar</button>
-      <button class="btn-primary" onclick="saveApiKey()">Guardar</button>
+      <button class="btn-outline" onclick="closeApiModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveApiKey()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT MODAL -->
+<div class="modal-overlay" id="contactModal" style="display:none;">
+  <div class="modal">
+    <h3 id="contactModalTitle">Add Contact</h3>
+    <div class="form-row"><label class="form-label">Full Name *</label><input type="text" id="cName" class="form-input" placeholder="e.g. Carlos Mendoza" /></div>
+    <div class="form-row"><label class="form-label">Company</label><input type="text" id="cCompany" class="form-input" placeholder="e.g. Acme Corp" /></div>
+    <div class="form-row"><label class="form-label">Industry</label><input type="text" id="cIndustry" class="form-input" placeholder="e.g. Real Estate, Dental, Marketing" /></div>
+    <div class="form-row"><label class="form-label">Phone / WhatsApp</label><input type="tel" id="cPhone" class="form-input" placeholder="+1 555 000 0000" /></div>
+    <div class="form-row"><label class="form-label">Email</label><input type="email" id="cEmail" class="form-input" placeholder="contact@email.com" /></div>
+    <div class="form-row"><label class="form-label">Notes</label><textarea id="cNotes" style="min-height:70px;" placeholder="How did you meet? What do they need?"></textarea></div>
+    <div class="modal-btns">
+      <button class="btn-outline" onclick="closeContactModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveContact()">Save Contact</button>
     </div>
   </div>
 </div>
 
 <script>
-const COLORS = ['#E6F1FB:#0C447C', '#EAF3DE:#27500A', '#FAEEDA:#854F0B', '#FCEBEB:#A32D2D', '#F3EDFF:#4A2D99'];
+const COLORS = ['#E6F1FB:#0C447C','#EAF3DE:#27500A','#FAEEDA:#854F0B','#FCEBEB:#A32D2D','#F3EDFF:#4A2D99'];
 let contacts = JSON.parse(localStorage.getItem('agentecrm_contacts') || '[]');
-let selected = null;
+let leads = JSON.parse(localStorage.getItem('agentecrm_leads') || '[]');
+let selected = null, selectedType = null, currentSidebarTab = 'pipeline', closedOpen = false, editingContactId = null;
 
-if (contacts.length === 0) {
-  contacts = [
-    { id:1, name:'Carlos M.', industry:'Inmobiliaria', initials:'CM', color:0, status:'warm',
-      lastMsg:'Ok perfecto, las espero',
-      conv:'Carlos M.: Hola, vi el depa en Polanco. ¿Sigue disponible?\nTú: Hola Carlos! Sí, son 18,000 al mes. ¿Te interesa verlo?\nCarlos M.: Está un poco caro... ¿tiene algo más económico?\nTú: Tengo uno en Anzures a 15,500. ¿Te mando fotos?\nCarlos M.: Sí. ¿Aceptan mascotas? Tengo un perro pequeño\nTú: El de Anzures sí acepta mascotas con depósito extra\nCarlos M.: Ok perfecto, las espero',
-      analysis: null },
-    { id:2, name:'Daniela R.', industry:'Marketing', initials:'DR', color:1, status:'hot',
-      lastMsg:'Lo reviso hoy con mi socia',
-      conv:'Daniela R.: Buenas, nos recomendaron para manejo de redes. ¿Qué manejan?\nTú: IG, Facebook y TikTok. Contenido + pauta. ¿Para qué giro?\nDaniela R.: Línea de ropa femenina. Queremos crecer ventas online\nTú: Perfecto. Paquete básico $8,500 MXN/mes. ¿Mando propuesta?\nDaniela R.: Sí mándala. ¿Tienen casos de éxito en moda?\nTú: Claro, te mando casos también. Dame tu correo\nDaniela R.: daniela@marcaxyz.com — lo reviso hoy con mi socia',
-      analysis: null },
-    { id:3, name:'Ana G.', industry:'Clínica dental', initials:'AG', color:2, status:'hot',
-      lastMsg:'Las 10am estaría bien. ¿Cómo aparto?',
-      conv:'Ana G.: Hola, quería preguntar por el precio de blanqueamiento\nRecepción: El blanqueamiento está en $2,800. Incluye evaluación sin costo\nAna G.: ¿Y en cuántas sesiones?\nRecepción: Una sola sesión de 90 minutos\nAna G.: ¿Tienen disponibilidad este sábado?\nRecepción: Tenemos 10am y 12pm\nAna G.: Las 10am estaría bien. ¿Cómo aparto?',
-      analysis: null },
+if (leads.length === 0) {
+  leads = [
+    { id:1, name:'Carlos M.', industry:'Real Estate', initials:'CM', color:0, status:'warm', closed:false, closedAt:null,
+      lastMsg:'Ok perfect, waiting for photos',
+      conv:'Carlos M.: Hi, I saw the apt in Polanco. Still available?\nYou: Hi Carlos! Yes, $18,000/mo includes maintenance. Want to see it?\nCarlos M.: A bit pricey... anything cheaper nearby?\nYou: I have one in Anzures at $15,500. Want photos?\nCarlos M.: Yes. Do you accept pets? I have a small dog\nYou: Anzures allows small pets with extra deposit\nCarlos M.: Ok perfect, waiting for photos', analysis:null },
+    { id:2, name:'Daniela R.', industry:'Marketing Agency', initials:'DR', color:1, status:'hot', closed:false, closedAt:null,
+      lastMsg:"I'll review it today with my partner",
+      conv:"Daniela R.: Hi, we were referred to you for social media. What do you handle?\nYou: Hi Daniela! IG, Facebook, TikTok. Content + ads. What industry?\nDaniela R.: Women's clothing brand. Want to grow online sales\nYou: Perfect. Basic package $850/mo. Want a proposal?\nDaniela R.: Yes. Do you have fashion success cases?\nYou: Sure, sending case studies. Your email?\nDaniela R.: daniela@marcaxyz.com — I'll review it today with my partner", analysis:null },
+    { id:3, name:'Ana G.', industry:'Dental Clinic', initials:'AG', color:2, status:'hot', closed:false, closedAt:null,
+      lastMsg:'10am works. How do I book?',
+      conv:'Ana G.: Hi, how much is teeth whitening?\nReception: $280, includes free evaluation\nAna G.: How many sessions?\nReception: Just one 90-min session. Immediate results\nAna G.: Availability Saturday?\nReception: 10am or 12pm\nAna G.: 10am works. How do I book?', analysis:null },
   ];
-  saveContacts();
+  saveLeads();
 }
 
-function saveContacts() {
-  localStorage.setItem('agentecrm_contacts', JSON.stringify(contacts));
-}
-
-function getColors(i) {
-  const pair = COLORS[i % COLORS.length].split(':');
-  return { bg: pair[0], text: pair[1] };
-}
-
-function getStatusLabel(s) {
-  return s === 'hot' ? 'Cerrar ya' : s === 'warm' ? 'En proceso' : 'Frío';
-}
+function saveLeads() { localStorage.setItem('agentecrm_leads', JSON.stringify(leads)); }
+function saveContacts() { localStorage.setItem('agentecrm_contacts', JSON.stringify(contacts)); }
+function getColors(i) { const p = COLORS[i%COLORS.length].split(':'); return {bg:p[0],text:p[1]}; }
+function getStatusLabel(s) { return s==='hot'?'Close now':s==='warm'?'In progress':'Cold'; }
 
 function updateStats() {
-  document.getElementById('sTotal').textContent = contacts.length;
-  document.getElementById('sHot').textContent = contacts.filter(c=>c.status==='hot').length;
-  document.getElementById('sWarm').textContent = contacts.filter(c=>c.status==='warm').length;
-  document.getElementById('sCold').textContent = contacts.filter(c=>c.status==='cold').length;
+  const active = leads.filter(l=>!l.closed);
+  document.getElementById('sTotal').textContent = active.length;
+  document.getElementById('sHot').textContent = active.filter(l=>l.status==='hot').length;
+  document.getElementById('sWarm').textContent = active.filter(l=>l.status==='warm').length;
+  document.getElementById('sClosed').textContent = leads.filter(l=>l.closed).length;
 }
 
-function renderList() {
+function switchSidebarTab(tab) {
+  currentSidebarTab = tab;
+  document.getElementById('stab-pipeline').classList.toggle('active', tab==='pipeline');
+  document.getElementById('stab-contacts').classList.toggle('active', tab==='contacts');
+  renderSidebar();
+}
+
+function renderSidebar() {
   updateStats();
-  document.getElementById('contactList').innerHTML = contacts.map(c => {
-    const col = getColors(c.color);
-    return `<div class="contact-row ${selected===c.id?'active':''}" onclick="selectContact(${c.id})">
-      <div class="avatar" style="background:${col.bg};color:${col.text};">${c.initials}</div>
-      <div class="contact-info">
-        <div class="contact-name">${c.name}</div>
-        <div class="contact-sub">${c.lastMsg}</div>
-      </div>
-      <span class="badge badge-${c.status}">${getStatusLabel(c.status)}</span>
+  currentSidebarTab === 'pipeline' ? renderPipeline() : renderContactsTab();
+}
+
+function renderPipeline() {
+  const active = leads.filter(l=>!l.closed);
+  const closed = leads.filter(l=>l.closed);
+  let html = `<div class="section-hdr">
+    <span class="section-hdr-title">Active Leads</span>
+    <div class="section-hdr-right">
+      <span class="section-count">${active.length}</span>
+      <button class="btn-tiny" onclick="event.stopPropagation();addNewLead()">+ New</button>
+    </div>
+  </div>`;
+  if (!active.length) html += `<div style="padding:20px 16px;font-size:13px;color:var(--text-tertiary);text-align:center;">No active leads. Add contacts and start conversations.</div>`;
+  active.forEach(l => {
+    const col = getColors(l.color);
+    html += `<div class="lead-row ${selected===l.id&&selectedType==='lead'?'active':''}" onclick="selectLead(${l.id})">
+      <div class="avatar" style="background:${col.bg};color:${col.text};">${l.initials}</div>
+      <div class="row-info"><div class="row-name">${l.name}</div><div class="row-sub">${l.lastMsg}</div></div>
+      <span class="badge badge-${l.status}">${getStatusLabel(l.status)}</span>
     </div>`;
-  }).join('');
+  });
+  html += `<div class="section-hdr" onclick="closedOpen=!closedOpen;renderPipeline();" style="cursor:pointer;">
+    <span class="section-hdr-title">Closed Won ✓</span>
+    <div class="section-hdr-right">
+      <span class="section-count">${closed.length}</span>
+      <span class="section-arrow ${closedOpen?'open':'closed'}">▼</span>
+    </div>
+  </div>`;
+  if (closedOpen) {
+    if (!closed.length) html += `<div style="padding:14px 16px;font-size:12px;color:var(--text-tertiary);text-align:center;">No closed deals yet.</div>`;
+    closed.forEach(l => {
+      const col = getColors(l.color);
+      html += `<div class="lead-row ${selected===l.id&&selectedType==='lead'?'active':''}" onclick="selectLead(${l.id})" style="opacity:.7;">
+        <div class="avatar" style="background:${col.bg};color:${col.text};">${l.initials}</div>
+        <div class="row-info"><div class="row-name">${l.name}</div><div class="row-sub">Closed ${l.closedAt||''}</div></div>
+        <span class="badge badge-closed">Won ✓</span>
+      </div>`;
+    });
+  }
+  document.getElementById('sidebarContent').innerHTML = html;
+}
+
+function renderContactsTab() {
+  let html = `<div class="section-hdr">
+    <span class="section-hdr-title">All Contacts</span>
+    <div class="section-hdr-right">
+      <span class="section-count">${contacts.length}</span>
+      <button class="btn-tiny" onclick="addNewContact()">+ Add</button>
+    </div>
+  </div>`;
+  if (!contacts.length) {
+    html += `<div style="padding:28px 16px;font-size:13px;color:var(--text-tertiary);text-align:center;"><div style="font-size:32px;margin-bottom:8px;">👥</div>No contacts yet.<br>Click "+ Add Contact" to start.</div>`;
+  } else {
+    contacts.forEach(c => {
+      const col = getColors(c.color);
+      const hasActive = leads.some(l=>l.contactId===c.id&&!l.closed);
+      html += `<div class="contact-card ${selected===c.id&&selectedType==='contact'?'active':''}" onclick="selectContact(${c.id})">
+        <div class="avatar" style="background:${col.bg};color:${col.text};">${c.initials}</div>
+        <div class="row-info"><div class="row-name">${c.name}</div><div class="row-sub">${c.company||c.industry||'—'}</div></div>
+        <div onclick="event.stopPropagation()">
+          ${hasActive ? `<span style="font-size:11px;color:var(--amber-text);background:var(--amber-bg);padding:2px 8px;border-radius:20px;">Active</span>` : `<button class="btn-primary" style="font-size:11px;padding:3px 10px;border-radius:20px;" onclick="startConversation(${c.id})">+ Conv</button>`}
+        </div>
+      </div>`;
+    });
+  }
+  document.getElementById('sidebarContent').innerHTML = html;
+}
+
+function selectLead(id) {
+  selected = id; selectedType = 'lead';
+  renderSidebar();
+  showLeadDetail(leads.find(x=>x.id===id));
 }
 
 function selectContact(id) {
-  selected = id;
-  renderList();
-  const c = contacts.find(x=>x.id===id);
-  showContactDetail(c);
+  selected = id; selectedType = 'contact';
+  renderSidebar();
+  showContactDetail(contacts.find(x=>x.id===id));
 }
 
-function showContactDetail(c) {
-  const col = getColors(c.color);
+function showLeadDetail(l) {
+  const col = getColors(l.color);
   document.getElementById('detail').innerHTML = `
     <div class="detail-head">
-      <div class="avatar" style="background:${col.bg};color:${col.text};width:32px;height:32px;font-size:12px;">${c.initials}</div>
-      <div class="detail-name">${c.name}</div>
-      <span style="font-size:12px;color:${col.text};">${c.industry}</span>
-      <span class="badge badge-${c.status}" style="margin-left:auto;">${getStatusLabel(c.status)}</span>
+      <div class="avatar" style="background:${col.bg};color:${col.text};width:32px;height:32px;font-size:12px;flex-shrink:0;">${l.initials}</div>
+      <div class="detail-name">${l.name} <span style="font-size:12px;font-weight:400;color:var(--text-tertiary);">${l.industry||''}</span></div>
+      ${l.closed ? '<span class="badge badge-closed">Won ✓</span>' : `<span class="badge badge-${l.status}">${getStatusLabel(l.status)}</span>`}
     </div>
     <div class="detail-body">
       <div class="tabs">
-        <button class="tab active" id="tab-conv" onclick="showTab('conv',${c.id})">Conversación</button>
-        <button class="tab" id="tab-ai" onclick="showTab('ai',${c.id})">Análisis IA</button>
+        <button class="tab active" id="tab-conv" onclick="showLeadTab('conv',${l.id})">Conversation</button>
+        <button class="tab" id="tab-ai" onclick="showLeadTab('ai',${l.id})">AI Analysis</button>
       </div>
       <div id="tab-content"></div>
-    </div>
-  `;
-  showTab('conv', c.id);
+    </div>`;
+  showLeadTab('conv', l.id);
 }
 
-function showTab(tab, id) {
-  const c = contacts.find(x=>x.id===id);
+function showLeadTab(tab, id) {
+  const l = leads.find(x=>x.id===id);
   document.getElementById('tab-conv').classList.toggle('active', tab==='conv');
   document.getElementById('tab-ai').classList.toggle('active', tab==='ai');
   const content = document.getElementById('tab-content');
   if (tab === 'conv') {
-    const lines = c.conv.trim().split('\n');
-    const msgs = lines.map(line => {
-      const colon = line.indexOf(':');
-      if (colon === -1) return '';
-      const speaker = line.slice(0, colon).trim();
-      const text = line.slice(colon + 1).trim();
-      const isOut = speaker.toLowerCase() === 'tú' || speaker.toLowerCase() === 'tu' || speaker.toLowerCase() === 'recepción' || speaker.toLowerCase() === 'recepcion';
-      return `<div class="msg msg-${isOut?'out':'in'}">
-        <div class="msg-name">${speaker}</div>
-        <div class="bubble">${text}</div>
-      </div>`;
+    const msgs = (l.conv||'').trim().split('\n').map(line => {
+      const colon = line.indexOf(':'); if (colon===-1) return '';
+      const speaker = line.slice(0,colon).trim();
+      const text = line.slice(colon+1).trim();
+      const isOut = ['you','tú','tu','reception','recepcion','recepción'].includes(speaker.toLowerCase());
+      return `<div class="msg msg-${isOut?'out':'in'}"><div class="msg-name">${speaker}</div><div class="bubble">${text}</div></div>`;
     }).join('');
     content.innerHTML = `
-      <div class="chat-wrap">${msgs}</div>
-      <button class="btn-full" onclick="analyzeContact(${id})">Analizar con Claude →</button>
+      <div class="chat-wrap">${msgs||'<div style="color:var(--text-tertiary);font-size:13px;text-align:center;padding:20px;">No messages yet.</div>'}</div>
+      ${!l.closed ? `
+        <button class="btn-full" onclick="showLeadTab('ai',${id})">Analyze with Claude →</button>
+        <button class="btn-green" onclick="closeDeal(${id})">✓ Mark as Closed Won</button>
+      ` : `<div class="closed-banner"><span style="font-size:20px;">🎉</span><div><div style="font-size:13px;font-weight:500;color:var(--green-text);">Deal Closed!</div><div style="font-size:11px;color:var(--green-text);opacity:.7;">${l.closedAt||''}</div></div></div>`}
     `;
   } else {
-    if (!c.analysis) {
-      content.innerHTML = `
-        <div style="text-align:center;padding:2rem;color:var(--text-tertiary);font-size:13px;">
-          Aún no hay análisis. Presiona el botón para analizarlo con Claude.
-        </div>
-        <button class="btn-full" onclick="analyzeContact(${id})">Analizar con Claude →</button>
-      `;
-    } else {
-      renderAnalysis(c);
-    }
+    if (!l.analysis) {
+      content.innerHTML = `<div style="text-align:center;padding:2rem;color:var(--text-tertiary);font-size:13px;">No analysis yet.</div><button class="btn-full" onclick="analyzeLead(${id})">Analyze with Claude →</button>`;
+    } else renderLeadAnalysis(l);
   }
 }
 
-function renderAnalysis(c) {
-  const a = c.analysis;
+function renderLeadAnalysis(l) {
+  const a = l.analysis;
   const content = document.getElementById('tab-content');
   if (!content) return;
-  const objs = a.objeciones && a.objeciones.length
-    ? a.objeciones.map(o=>`<div class="objecion">${o}</div>`).join('')
-    : '<div class="objecion" style="color:var(--text-tertiary);">Ninguna detectada</div>';
+  const objs = a.objeciones&&a.objeciones.length ? a.objeciones.map(o=>`<div class="objecion">${o}</div>`).join('') : '<div class="objecion" style="color:var(--text-tertiary);">None detected</div>';
+  const msg = a.mensaje||a.message||'';
   content.innerHTML = `
-    <div class="ai-block">
-      <div class="ai-label">Situación</div>
-      <div class="ai-text">${a.resumen}</div>
-    </div>
-    <div class="ai-block">
-      <div class="ai-label">Intención del prospecto</div>
-      <div class="ai-text">${a.intencion}</div>
-    </div>
-    <div class="ai-block">
-      <div class="ai-label">Objeciones detectadas</div>
-      ${objs}
-    </div>
-    <div class="ai-block">
-      <div class="ai-label">Siguiente paso hoy</div>
-      <div class="ai-text" style="font-weight:500;">${a.siguiente}</div>
-    </div>
-    <div class="ai-msg">
-      <div class="ai-label">Mensaje listo para enviar</div>
-      <div class="ai-text" id="msgText">${a.mensaje}</div>
-      <button class="btn-copy" id="copyBtn" onclick="copyMessage('${escapeJs(a.mensaje)}')">Copiar mensaje</button>
-    </div>
-    <button class="btn-full" onclick="analyzeContact(${c.id})">Re-analizar →</button>
+    <div class="ai-block"><div class="ai-label">Situation</div><div class="ai-text">${a.resumen||a.summary||''}</div></div>
+    <div class="ai-block"><div class="ai-label">Prospect Intent</div><div class="ai-text">${a.intencion||a.intent||''}</div></div>
+    <div class="ai-block"><div class="ai-label">Objections</div>${objs}</div>
+    <div class="ai-block"><div class="ai-label">Next Step Today</div><div class="ai-text" style="font-weight:500;">${a.siguiente||a.next_step||''}</div></div>
+    <div class="ai-msg"><div class="ai-label">Message Ready to Send</div><div class="ai-text" id="msgText">${msg}</div><button class="btn-copy" id="copyBtn" onclick="copyMsg('${escJS(msg)}')">Copy message</button></div>
+    ${!l.closed ? `
+      <button class="btn-full" onclick="analyzeLead(${l.id})">Re-analyze →</button>
+      <button class="btn-green" onclick="closeDeal(${l.id})">✓ Mark as Closed Won</button>
+    ` : `<div class="closed-banner"><span style="font-size:20px;">🎉</span><div><div style="font-size:13px;font-weight:500;color:var(--green-text);">Deal Closed!</div><div style="font-size:11px;color:var(--green-text);opacity:.7;">${l.closedAt||''}</div></div></div>`}
   `;
 }
 
-function escapeJs(str) {
-  return str.replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,'\\n');
+function closeDeal(id) {
+  const l = leads.find(x=>x.id===id);
+  l.closed = true;
+  l.status = 'closed';
+  l.closedAt = new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  saveLeads(); renderSidebar(); showLeadDetail(l);
 }
 
-function copyMessage(txt) {
-  navigator.clipboard.writeText(txt).then(() => {
+async function analyzeLead(id) {
+  const apiKey = localStorage.getItem('agentecrm_apikey');
+  if (!apiKey) { showApiModal(); return; }
+  const l = leads.find(x=>x.id===id);
+  const content = document.getElementById('tab-content');
+  if (content) content.innerHTML = `<div class="loading"><div class="dot"></div><div class="dot"></div><div class="dot"></div><span class="thinking-text">Claude is analyzing...</span></div>`;
+  try {
+    const res = await fetch('/api/analyze', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({conversation:l.conv, apiKey}) });
+    const parsed = await res.json();
+    if (!res.ok) throw new Error(parsed.error||'Server error');
+    l.analysis = { ...parsed, resumen:parsed.summary||parsed.resumen, intencion:parsed.intent||parsed.intencion, siguiente:parsed.next_step||parsed.siguiente, mensaje:parsed.message||parsed.mensaje, objeciones:parsed.objeciones||parsed.objections||[] };
+    l.status = parsed.status==='closed'?l.status:parsed.status;
+    saveLeads(); renderSidebar();
+    document.getElementById('tab-conv').classList.remove('active');
+    document.getElementById('tab-ai').classList.add('active');
+    renderLeadAnalysis(l);
+  } catch(e) {
+    if (content) content.innerHTML = `<div style="background:#FCEBEB;color:#A32D2D;padding:12px;border-radius:6px;font-size:13px;">Error: ${e.message}</div><button class="btn-full" onclick="showApiModal()">Configure API Key</button>`;
+  }
+}
+
+function showContactDetail(c) {
+  const col = getColors(c.color);
+  const cLeads = leads.filter(l=>l.contactId===c.id);
+  document.getElementById('detail').innerHTML = `
+    <div class="detail-head">
+      <div class="avatar" style="background:${col.bg};color:${col.text};width:32px;height:32px;font-size:12px;flex-shrink:0;">${c.initials}</div>
+      <div class="detail-name">${c.name}</div>
+      <button class="btn-outline" onclick="editContact(${c.id})" style="font-size:12px;padding:4px 10px;">Edit</button>
+    </div>
+    <div class="detail-body">
+      <div class="info-grid">
+        ${c.company?`<div class="ai-block"><div class="ai-label">Company</div><div class="ai-text">${c.company}</div></div>`:''}
+        ${c.industry?`<div class="ai-block"><div class="ai-label">Industry</div><div class="ai-text">${c.industry}</div></div>`:''}
+        ${c.phone?`<div class="ai-block"><div class="ai-label">Phone</div><div class="ai-text">${c.phone}</div></div>`:''}
+        ${c.email?`<div class="ai-block"><div class="ai-label">Email</div><div class="ai-text">${c.email}</div></div>`:''}
+      </div>
+      ${c.notes?`<div class="ai-block" style="margin-bottom:16px;"><div class="ai-label">Notes</div><div class="ai-text">${c.notes}</div></div>`:''}
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div style="font-size:13px;font-weight:500;">Conversations (${cLeads.length})</div>
+        <button class="btn-primary" style="font-size:12px;padding:4px 12px;" onclick="startConversation(${c.id})">+ New</button>
+      </div>
+      ${!cLeads.length ? `<div style="padding:16px;font-size:13px;color:var(--text-tertiary);text-align:center;">No conversations yet.</div>` :
+        cLeads.map(l=>`<div class="conv-item" onclick="selectLead(${l.id})">
+          <div style="flex:1;"><div style="font-size:13px;font-weight:500;">${l.industry||'Conversation'}</div><div style="font-size:11px;color:var(--text-tertiary);">${l.lastMsg}</div></div>
+          <span class="badge ${l.closed?'badge-closed':'badge-'+l.status}">${l.closed?'Won ✓':getStatusLabel(l.status)}</span>
+        </div>`).join('')
+      }
+    </div>`;
+}
+
+function startConversation(contactId) {
+  const c = contacts.find(x=>x.id===contactId);
+  selected = null; selectedType = null;
+  switchSidebarTab('pipeline');
+  document.getElementById('detail').innerHTML = `
+    <div class="detail-head"><div class="detail-name">New Conversation — ${c.name}</div></div>
+    <div class="detail-body">
+      <div class="form-row"><label class="form-label">Topic / Deal</label><input type="text" id="newTopic" class="form-input" placeholder="e.g. Website redesign, Apt rental, Dental cleaning" /></div>
+      <div class="form-row"><label class="form-label">Paste WhatsApp conversation</label><textarea id="newConv" placeholder="${c.name}: Hi, I saw your product\nYou: Hi ${c.name.split(' ')[0]}! Thanks for reaching out\n${c.name}: How much does it cost?"></textarea></div>
+      <button class="btn-full" onclick="saveLead(${contactId})" style="background:#378ADD;color:white;border:none;">Save & Analyze with Claude →</button>
+      <button class="btn-full" onclick="saveLead(${contactId},true)" style="margin-top:6px;">Save without analyzing</button>
+    </div>`;
+}
+
+function saveLead(contactId, skip=false) {
+  const c = contacts.find(x=>x.id===contactId);
+  const conv = document.getElementById('newConv').value.trim();
+  const topic = document.getElementById('newTopic').value.trim();
+  const id = Date.now();
+  const l = { id, contactId, name:c.name, initials:c.initials, color:c.color, industry:topic||c.industry||'General', status:'warm', closed:false, closedAt:null, lastMsg:conv?(conv.split('\n').pop().split(':').slice(1).join(':').trim()||conv.slice(-50)):'New conversation', conv:conv||'', analysis:null };
+  leads.unshift(l); saveLeads();
+  selected = id; selectedType = 'lead';
+  renderSidebar(); showLeadDetail(l);
+  if (!skip && conv) analyzeLead(id);
+}
+
+function addNewLead() {
+  selected = null; selectedType = null; renderSidebar();
+  document.getElementById('detail').innerHTML = `
+    <div class="detail-head"><div class="detail-name">New Lead</div></div>
+    <div class="detail-body">
+      <div class="form-row"><label class="form-label">Name *</label><input type="text" id="newName" class="form-input" placeholder="e.g. Carlos Mendoza" /></div>
+      <div class="form-row"><label class="form-label">Industry</label><input type="text" id="newIndustry" class="form-input" placeholder="e.g. Real Estate, Dental, Agency" /></div>
+      <div class="form-row"><label class="form-label">Paste WhatsApp conversation *</label><textarea id="newConv" placeholder="Carlos: Hi, I saw your listing\nYou: Hi Carlos! Still available..."></textarea></div>
+      <button class="btn-full" onclick="saveNewLeadDirect()" style="background:#378ADD;color:white;border:none;">Save & Analyze with Claude →</button>
+    </div>`;
+}
+
+function saveNewLeadDirect() {
+  const name = document.getElementById('newName').value.trim();
+  const conv = document.getElementById('newConv').value.trim();
+  if (!name||!conv) { alert('Name and conversation required.'); return; }
+  const id = Date.now();
+  const l = { id, name, initials:name.split(' ').slice(0,2).map(w=>w[0].toUpperCase()).join(''), color:leads.length%COLORS.length, industry:document.getElementById('newIndustry').value.trim()||'General', status:'warm', closed:false, closedAt:null, lastMsg:conv.split('\n').pop().split(':').slice(1).join(':').trim()||conv.slice(-50), conv, analysis:null };
+  leads.unshift(l); saveLeads();
+  selected = id; selectedType = 'lead';
+  renderSidebar(); showLeadDetail(l); analyzeLead(id);
+}
+
+function addNewContact() {
+  editingContactId = null;
+  document.getElementById('contactModalTitle').textContent = 'Add Contact';
+  ['cName','cCompany','cIndustry','cPhone','cEmail','cNotes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('contactModal').style.display = 'flex';
+  setTimeout(()=>document.getElementById('cName').focus(),100);
+}
+
+function editContact(id) {
+  const c = contacts.find(x=>x.id===id);
+  editingContactId = id;
+  document.getElementById('contactModalTitle').textContent = 'Edit Contact';
+  document.getElementById('cName').value = c.name||'';
+  document.getElementById('cCompany').value = c.company||'';
+  document.getElementById('cIndustry').value = c.industry||'';
+  document.getElementById('cPhone').value = c.phone||'';
+  document.getElementById('cEmail').value = c.email||'';
+  document.getElementById('cNotes').value = c.notes||'';
+  document.getElementById('contactModal').style.display = 'flex';
+}
+
+function closeContactModal() { document.getElementById('contactModal').style.display='none'; }
+
+function saveContact() {
+  const name = document.getElementById('cName').value.trim();
+  if (!name) { document.getElementById('cName').style.borderColor='red'; return; }
+  const initials = name.split(' ').slice(0,2).map(w=>w[0].toUpperCase()).join('');
+  const data = { name, initials, company:document.getElementById('cCompany').value.trim(), industry:document.getElementById('cIndustry').value.trim(), phone:document.getElementById('cPhone').value.trim(), email:document.getElementById('cEmail').value.trim(), notes:document.getElementById('cNotes').value.trim() };
+  if (editingContactId) {
+    const c = contacts.find(x=>x.id===editingContactId);
+    Object.assign(c, data); saveContacts(); closeContactModal(); renderSidebar(); showContactDetail(c);
+  } else {
+    const c = { id:Date.now(), color:contacts.length%COLORS.length, ...data };
+    contacts.unshift(c); saveContacts(); closeContactModal();
+    selected = c.id; selectedType = 'contact';
+    switchSidebarTab('contacts'); showContactDetail(c);
+  }
+}
+
+function escJS(str) { return (str||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,'\\n'); }
+
+function copyMsg(txt) {
+  navigator.clipboard.writeText(txt).then(()=>{
     const btn = document.getElementById('copyBtn');
-    if (btn) { btn.textContent = '¡Copiado!'; btn.classList.add('copied'); setTimeout(()=>{ btn.textContent='Copiar mensaje'; btn.classList.remove('copied'); },2000); }
+    if (btn) { btn.textContent='Copied!'; btn.classList.add('copied'); setTimeout(()=>{ btn.textContent='Copy message'; btn.classList.remove('copied'); },2000); }
   });
 }
 
-async function analyzeContact(id) {
-  const apiKey = localStorage.getItem('agentecrm_apikey');
-  if (!apiKey) { showApiModal(); return; }
-  const c = contacts.find(x=>x.id===id);
-  const content = document.getElementById('tab-content');
-  if (content) content.innerHTML = `<div class="loading"><div class="dot"></div><div class="dot"></div><div class="dot"></div><span class="thinking-text">Claude está analizando la conversación...</span></div>`;
-
-  const prompt = `Eres el motor de análisis de AgenteCRM. Analiza esta conversación de ventas y responde SOLO en JSON válido, sin texto extra ni markdown:
-{
-  "status": "hot|warm|cold",
-  "status_razon": "frase corta",
-  "resumen": "1-2 oraciones sobre la situación",
-  "intencion": "qué quiere realmente el prospecto",
-  "objeciones": ["objeción 1", "objeción 2"],
-  "siguiente": "acción concreta para HOY",
-  "mensaje": "mensaje de WhatsApp listo para enviar"
-}
-
-Conversación:
-${c.conv}`;
-
-  try {
-    const res = await fetch('/api/analyze', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ conversation: c.conv, apiKey })
-    });
-    const parsed = await res.json();
-    if (!res.ok) throw new Error(parsed.error || 'Error del servidor');
-    c.analysis = { ...parsed };
-    c.status = parsed.status;
-    saveContacts();
-    renderList();
-    document.getElementById('tab-conv').classList.remove('active');
-    document.getElementById('tab-ai').classList.add('active');
-    renderAnalysis(c);
-  } catch(e) {
-    if (content) content.innerHTML = `<div style="background:#FCEBEB;color:#A32D2D;padding:12px;border-radius:6px;font-size:13px;">Error: ${e.message}. Verifica tu API key.</div><button class="btn-full" onclick="showApiModal()">Configurar API Key</button>`;
-  }
-}
-
-function addNew() {
-  selected = null;
-  renderList();
-  document.getElementById('detail').innerHTML = `
-    <div class="detail-head">
-      <div class="detail-name">Nuevo prospecto</div>
-    </div>
-    <div class="detail-body">
-      <div style="margin-bottom:12px;">
-        <label style="font-size:12px;color:var(--text-tertiary);display:block;margin-bottom:6px;">Nombre del prospecto</label>
-        <input type="text" id="newName" placeholder="Ej: Carlos Mendoza" style="width:100%;padding:9px 12px;border-radius:6px;border:0.5px solid rgba(0,0,0,0.2);font-size:13px;font-family:inherit;background:var(--surface);color:var(--text);" />
-      </div>
-      <div style="margin-bottom:12px;">
-        <label style="font-size:12px;color:var(--text-tertiary);display:block;margin-bottom:6px;">Industria / giro</label>
-        <input type="text" id="newIndustry" placeholder="Ej: Inmobiliaria, Clínica, Agencia..." style="width:100%;padding:9px 12px;border-radius:6px;border:0.5px solid rgba(0,0,0,0.2);font-size:13px;font-family:inherit;background:var(--surface);color:var(--text);" />
-      </div>
-      <div style="margin-bottom:12px;">
-        <label style="font-size:12px;color:var(--text-tertiary);display:block;margin-bottom:6px;">Pega la conversación de WhatsApp</label>
-        <textarea id="newConv" placeholder="Carlos: Hola, vi tu producto en Instagram&#10;Tú: Hola Carlos! Gracias por escribir...&#10;Carlos: ¿Cuánto cuesta?"></textarea>
-      </div>
-      <button class="btn-full" onclick="saveNew()" style="background:#378ADD;color:white;border:none;">Guardar y analizar con Claude →</button>
-    </div>
-  `;
-}
-
-function saveNew() {
-  const name = document.getElementById('newName').value.trim();
-  const industry = document.getElementById('newIndustry').value.trim();
-  const conv = document.getElementById('newConv').value.trim();
-  if (!name || !conv) { alert('Ingresa el nombre y la conversación.'); return; }
-  const initials = name.split(' ').slice(0,2).map(w=>w[0].toUpperCase()).join('');
-  const id = Date.now();
-  const c = { id, name, industry: industry || 'General', initials, color: contacts.length % COLORS.length, status: 'warm', lastMsg: conv.split('\n').pop().split(':').slice(1).join(':').trim() || conv.slice(-40), conv, analysis: null };
-  contacts.unshift(c);
-  saveContacts();
-  selected = id;
-  renderList();
-  showContactDetail(c);
-  analyzeContact(id);
-}
-
 function showApiModal() {
-  const stored = localStorage.getItem('agentecrm_apikey') || '';
-  document.getElementById('apiKeyInput').value = stored;
-  document.getElementById('apiModal').style.display = 'flex';
-  setTimeout(() => document.getElementById('apiKeyInput').focus(), 100);
+  document.getElementById('apiKeyInput').value = localStorage.getItem('agentecrm_apikey')||'';
+  document.getElementById('apiModal').style.display='flex';
+  setTimeout(()=>document.getElementById('apiKeyInput').focus(),100);
 }
-function closeApiModal() { document.getElementById('apiModal').style.display = 'none'; }
+function closeApiModal() { document.getElementById('apiModal').style.display='none'; }
 function saveApiKey() {
   const input = document.getElementById('apiKeyInput');
   const key = input.value.trim();
-  if (!key || !key.startsWith('sk-')) { 
-    input.style.borderColor = 'red';
-    input.placeholder = 'La key debe empezar con sk-ant-...';
-    return; 
-  }
-  try {
-    localStorage.setItem('agentecrm_apikey', key);
-    const saved = localStorage.getItem('agentecrm_apikey');
-    if (saved === key) {
-      closeApiModal();
-      alert('✓ API Key guardada correctamente');
-    } else {
-      alert('Error al guardar. Intenta de nuevo.');
-    }
-  } catch(e) {
-    alert('Error: ' + e.message);
-  }
+  if (!key||!key.startsWith('sk-')) { input.style.borderColor='red'; return; }
+  localStorage.setItem('agentecrm_apikey', key);
+  if (localStorage.getItem('agentecrm_apikey')===key) { closeApiModal(); alert('✓ API Key saved!'); }
+  else alert('Error saving. Try again.');
 }
 
-renderList();
+renderSidebar();
 </script>
 </body>
 </html>
